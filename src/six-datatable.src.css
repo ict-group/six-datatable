@@ -1,0 +1,110 @@
+/* Plugins */
+
+.sdt-plugins-container {
+    @apply py-4;
+  }
+  
+  .sdt-plugins {
+    @apply flex flex-row items-center justify-between py-4;
+  }
+  
+  .pages-container {
+    @apply flex flex-row items-center justify-between py-4;
+  }
+  
+  .pages-container div {
+    @apply py-1 px-2 ml-3 border rounded text-gray-500 shadow border-gray-300 cursor-pointer;
+  }
+  
+  .pages-container div.selected-page {
+    @apply text-gray-900;
+  }
+  
+  .pages-container div:hover {
+    @apply bg-gray-200;
+  }
+  
+  
+  .sdt-plg-columns-picker {
+    @apply flex-initial;
+  }
+  
+  .sdt-plg-search {
+    @apply flex-initial;
+  }
+  
+  .std-plg-search input {
+    @apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight;
+  }
+  
+  .std-plg-search input:focus {
+    @apply outline-none shadow-outline;
+  }
+  
+  
+  .sdt-columns-picker-container {
+    @apply hidden;
+  }
+  
+  .sdt-columns-picker-container ul {
+    @apply h-48 overflow-auto mb-4;
+  }
+  
+  
+  .sdt-columns-picker-container li {
+    @apply bg-gray-100 border border-gray-300 py-2 px-4 block whitespace-no-wrap mb-3;
+  }
+  
+  .sdt-columns-picker-container.picker-is-open {
+    @apply block;
+  }
+  
+  
+  .btn {
+    @apply font-bold py-2 px-4 rounded;
+  }
+  
+  .btn-blue {
+    @apply bg-blue-500 text-white;
+  }
+  
+  .btn-blue:hover {
+    @apply bg-blue-700;
+  }
+  
+  thead tr th span {
+    @apply items-center justify-between;
+  }
+  
+  thead tr th span i svg {
+    @apply h-3 w-3 text-right cursor-pointer ml-2;
+  }
+  
+  
+  @media (min-width: 1280px) {
+  
+    .sdt-container {
+      @apply grid grid-cols-12 gap-4;
+    }
+  
+    .sdt-plugins-container {
+      @apply col-span-12;
+    }
+    
+    .sdt-table-container {
+      @apply col-span-12;
+    }
+      
+    .sdt-table-container.picker-is-open {
+      @apply col-span-10;
+    }
+  
+    .sdt-columns-picker-container.picker-is-open {
+      @apply block col-span-2;
+    }
+  
+    .sdt-columns-picker-container ul {
+      @apply h-full mb-0;
+    }
+  
+   }

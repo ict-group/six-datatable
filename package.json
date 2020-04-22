@@ -1,0 +1,24 @@
+{
+    "name": "six-datatable",
+    "version": "1.0.0",
+    "description": "",
+    "main": "datatable.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "snowpack": "^1.7.0"
+    },
+    "snowpack": {
+        "webDependencies": [
+            "lit-html",
+            "lit-html/directives/unsafe-html.js"
+        ]
+    },
+    "dependencies": {
+        "lit-element": "^2.3.1",
+        "lit-html": "^1.2.1"
+    }
+}

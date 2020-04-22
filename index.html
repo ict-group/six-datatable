@@ -1,0 +1,89 @@
+<!-- File Location: index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Six Datatable example</title>
+    <link href="tailwind.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="app.js"></script>
+    <script type="module" src="/src/six-datatable-webm.js"></script>
+
+    <div style="padding: 15px;">
+      <six-datatable id="six-demo-table"></six-datatable>
+    </div>
+
+    <script>
+      const sixDatatable = document.querySelector('#six-demo-table');
+
+      const nameDataHandler = (data) => {
+        return data.first_name + ' ' + data.last_name;
+      };
+      
+      const rowCSSClass = {
+        'tbody tr': '',
+        'tbody tr td': 'border border-gray-300 px-4 py-2 text-gray-800',
+        'tbody tr td span': 'break-all',
+      };
+
+      sixDatatable.tableCSSClass = {
+        table: 'border-collapse border-2 border-gray-300 w-full',
+        thead: '',
+        'thead tr': '',
+        'thead tr th': 'border border-gray-300 px-4 py-2 text-gray-800 text-left',
+        'thead tr th span': 'flex flex-row',
+      };
+
+      // Columns
+      const columns = {
+        leftControls: {
+          showAlways: true,
+          canBePicked: false,
+          type: 'html',
+          title: 'Controls',
+          html: '<button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Detail</button>',
+          rowCSSClass,
+        },
+        id: { title: 'ID', rowCSSClass },
+        first_name: { title: 'Name', rowCSSClass, dataHandler: "nameDataHandler"},
+        gender: { title: 'Gender', rowCSSClass },
+        buzzword: { title: 'Said', rowCSSClass },
+        rightControls: {
+          showAlways: true,
+          canBePicked: false,
+          type: 'html',
+          title: 'Controls',
+          html: '<button class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">Detail</button>',
+          rowCSSClass,
+        },
+      };
+
+      // Plugins
+      sixDatatable.plugins = {
+        picker: { status: true, label: 'Columns selector' },
+        search: { status: true, label: 'Search' },
+        order: { status: true },
+        pagination: { status: true },
+      };
+      // Css
+      sixDatatable.cssFiles = ['/tailwind/tailwind.min.css', '/six-datatable.css'];
+      // Rows
+      sixDatatable.pageSize = 25;
+      // Columns
+      sixDatatable.columns = columns;
+      sixDatatable.maxColumns = 10;
+      // Data handlers
+      sixDatatable.nameDataHandler = nameDataHandler;
+      // sixDatatable.hasExternalDataProvider = true;
+      sixDatatable.totalRows = 7;
+      // Data
+      readLocalFile('mockdata.json').then(data => {
+        sixDatatable.data = JSON.parse(data);
+      });
+
+      document.addEventListener('pageRequest', function (e) {}, false);
+      document.addEventListener('filterData', function (e) {}, false);
+    </script>
+  </body>
+</html>
