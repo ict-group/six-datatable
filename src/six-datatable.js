@@ -42,7 +42,10 @@ class SixDatatable extends LitElement {
     this._data = [];
     this._showingData = [];
     this._order = {};
+    this.columns = {};
     this.cssFiles = [];
+    this.plugins = {};
+    this.tableCSSClass = {};
   }
 
   firstUpdated() {
@@ -82,8 +85,8 @@ class SixDatatable extends LitElement {
                     ${Object.keys(this.columns).map((colKey) => {
                       return this._showColumn(colKey)
                         ? html`
-                            <th class="${this._getTableClass('thead tr th')}" @click="${() => this.setOrder(colKey)}">
-                              <span class="${this._getTableClass('thead tr th span')}">${this._getColumn(colKey).title} <i>${this._getOrderIcon(colKey)}</i></span>
+                            <th class="${this._getTableClass('thead tr th', colKey)}" @click="${() => this.setOrder(colKey)}">
+                              <span class="${this._getTableClass('thead tr th span', colKey)}">${this._getColumn(colKey).title} <i>${this._getOrderIcon(colKey)}</i></span>
                             </th>
                           `
                         : '';
@@ -92,11 +95,11 @@ class SixDatatable extends LitElement {
                 </thead>
                 <tbody class="${this._getTableClass('tbody')}">
                     ${this._showingData.map((row) => {
-                      return html` <tr class="${this._getTableClass('tbody tr')}">
+                      return html` <tr class="${this._getRowCSSClass(null, row, 'tbody tr')}">
                         ${Object.keys(this.columns).map((colKey) => {
                           return this._showColumn(colKey)
-                            ? html`<td class="${this._getRowCSSClass(colKey, 'tbody tr td')}">
-                                <span class="${this._getRowCSSClass(colKey, 'tbody tr td span')}" @click="${() => this._cellEmit(colKey, 'click', row)}">
+                            ? html`<td class="${this._getRowCSSClass(colKey, row, 'tbody tr td')}">
+                                <span class="${this._getRowCSSClass(colKey, row, 'tbody tr td span')}" @click="${(e) => this._cellEmit(colKey, 'cell-click', row)}">
                                   ${this._getColumnValueForRow(row, colKey)}
                                 </span>
                               </td>`
@@ -149,9 +152,12 @@ class SixDatatable extends LitElement {
           order: this._order,
           page: 1,
         },
+        composed: true,
+        bubbles: true,
+        cancelable: false,
       });
 
-      document.dispatchEvent(customEvent);
+      this.dispatchEvent(customEvent);
       return;
     }
 
@@ -178,8 +184,12 @@ class SixDatatable extends LitElement {
     this._displayPage(1);
   }
 
-  _getTableClass(elementName) {
-    return this.tableCSSClass[elementName] || '';
+  _getTableClass(elementName, colKey) {
+    return colKey && this.tableCSSClass[colKey] && this.tableCSSClass[colKey][elementName]
+      ? this.tableCSSClass[colKey][elementName]
+      : this.tableCSSClass['_default'] && this.tableCSSClass['_default'][elementName]
+      ? this.tableCSSClass['_default'][elementName]
+      : '';
   }
 
   /* Columns */
@@ -193,7 +203,13 @@ class SixDatatable extends LitElement {
     return this.columns[colKey];
   }
 
-  _getRowCSSClass(colKey, tag) {
+  _getRowCSSClass(colKey, row, tag) {
+    if (row._rowCSSClass && row._rowCSSClass[tag]) {
+      return row._rowCSSClass[tag];
+    }
+    if (!colKey) {
+      return;
+    }
     return this.columns[colKey].rowCSSClass && this.columns[colKey].rowCSSClass[tag] ? this.columns[colKey].rowCSSClass[tag] : '';
   }
 
@@ -202,7 +218,7 @@ class SixDatatable extends LitElement {
 
     // Fixed html value
     if (column.type && column.type === 'html') {
-      return unsafeHTML(column.html);
+      return unsafeHTML(row[colKey] || column.html || '');
     }
 
     // Row-column value
@@ -228,22 +244,24 @@ class SixDatatable extends LitElement {
 
   /* Cells */
 
-  _cellEmit(colKey, event, rowData) {
+  _cellEmit(colKey, action, rowData) {
     const eventData = this._columnIsHTML(colKey) ? rowData : rowData[colKey];
     const column = this._getColumn(colKey);
 
-    const customEvent = new CustomEvent(event, {
+    const customEvent = new CustomEvent('cell-click', {
       detail: {
         colKey,
-        target: event.target,
+        // target: e.target.node,
         eventData,
         dataHandler: column.dataHandler || null,
         dataHandlerFunction: column.dataHandler ? this[column.dataHandler] : null,
       },
+      composed: true,
+      bubbles: true,
+      cancelable: false,
     });
 
-    document.dispatchEvent(customEvent);
-    console.log(customEvent);
+    this.dispatchEvent(customEvent);
   }
 
   /* plugins */
@@ -310,10 +328,10 @@ class SixDatatable extends LitElement {
     return this._order;
   }
 
- /**
-  * Sets current ordering status
-  * @param {string} field 
-  */
+  /**
+   * Sets current ordering status
+   * @param {string} field
+   */
   setOrder(field) {
     if (!this.plugins.order || !this.plugins.order.status) {
       return;
@@ -352,7 +370,7 @@ class SixDatatable extends LitElement {
 
   /**
    * Returns the icon related to the current ordering status
-   * @param {string} colKey 
+   * @param {string} colKey
    */
   _getOrderIcon(colKey) {
     if (!this.plugins.order || !this.plugins.order.status) {
@@ -378,8 +396,8 @@ class SixDatatable extends LitElement {
 
   /**
    * Compare algorithm
-   * @param {*} colKey 
-   * @param {*} order 
+   * @param {*} colKey
+   * @param {*} order
    */
   _sortData(colKey, order = 'ASC') {
     return function innerSort(a, b) {
@@ -463,8 +481,11 @@ class SixDatatable extends LitElement {
         order: this._order,
         page: page,
       },
+      composed: true,
+      bubbles: true,
+      cancelable: false,
     });
-    document.dispatchEvent(customEvent);
+    this.dispatchEvent(customEvent);
   }
 
   /**
@@ -491,7 +512,7 @@ class SixDatatable extends LitElement {
   }
 
   /* Utils */
-  
+
   _clone(obj) {
     return JSON.parse(JSON.stringify(obj));
   }
