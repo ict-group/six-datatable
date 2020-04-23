@@ -277,7 +277,7 @@ class SixDatatable extends LitElement {
 
   _columnsPickerSpawner() {
     return this.plugins.picker && this.plugins.picker.status
-      ? html` <div class="std-plg-columns-picker" @click="${this._handleColumnsPicker}"><button class="btn btn-blue">${this.plugins.picker.label}</button></div> `
+      ? html` <div class="std-plg-columns-picker" @click="${this._handleColumnsPicker}"><button class="btn btn-blue">${unsafeHTML(this.plugins.picker.label)}</button></div> `
       : '';
   }
 
