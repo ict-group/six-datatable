@@ -216,9 +216,10 @@ class SixDatatable extends LitElement {
   _getColumnValueForRow(row, colKey) {
     const column = this.columns[colKey];
 
+
     // Fixed html value
     if (column.type && column.type === 'html') {
-      return unsafeHTML(row[colKey] || column.html || '');
+      return unsafeHTML(row[colKey] && row[colKey].html ? row[colKey].html : column.html || '');
     }
 
     // Row-column value

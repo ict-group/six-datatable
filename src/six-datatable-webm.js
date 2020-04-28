@@ -216,9 +216,10 @@ class SixDatatable extends LitElement {
   _getColumnValueForRow(row, colKey) {
     const column = this.columns[colKey];
 
+
     // Fixed html value
     if (column.type && column.type === 'html') {
-      return unsafeHTML(row[colKey] || column.html || '');
+      return unsafeHTML(row[colKey] && row[colKey].html ? row[colKey].html : column.html || '');
     }
 
     // Row-column value
@@ -277,7 +278,7 @@ class SixDatatable extends LitElement {
 
   _columnsPickerSpawner() {
     return this.plugins.picker && this.plugins.picker.status
-      ? html` <div class="std-plg-columns-picker" @click="${this._handleColumnsPicker}"><button class="btn btn-blue">${this.plugins.picker.label}</button></div> `
+      ? html` <div class="std-plg-columns-picker" @click="${this._handleColumnsPicker}"><button class="btn btn-blue">${unsafeHTML(this.plugins.picker.label)}</button></div> `
       : '';
   }
 
