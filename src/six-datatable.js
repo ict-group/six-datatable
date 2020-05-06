@@ -99,7 +99,7 @@ class SixDatatable extends LitElement {
                         ${Object.keys(this.columns).map((colKey) => {
                           return this._showColumn(colKey)
                             ? html`<td class="${this._getRowCSSClass(colKey, row, 'tbody tr td')}">
-                                <span class="${this._getRowCSSClass(colKey, row, 'tbody tr td span')}" @click="${(e) => this._cellEmit(colKey, 'cell-click', row)}">
+                                <span class="${this._getRowCSSClass(colKey, row, 'tbody tr td span')}" @click="${(e) => this._cellEmit(e, colKey, 'cell-click', row)}">
                                   ${this._getColumnValueForRow(row, colKey)}
                                 </span>
                               </td>`
@@ -245,7 +245,9 @@ class SixDatatable extends LitElement {
 
   /* Cells */
 
-  _cellEmit(colKey, action, rowData) {
+  _cellEmit(e, colKey, action, rowData) {
+    e.preventDefault();
+    e.stopPropagation();
     const eventData = this._columnIsHTML(colKey) ? rowData : rowData[colKey];
     const column = this._getColumn(colKey);
 
