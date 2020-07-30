@@ -67,16 +67,16 @@ class SixDatatable extends LitElement {
         })}
 
         <div class="sdt-container" id="${this.id}">
-
+        
           <div class="sdt-plugins-container">
             <div class="sdt-plugins">
-              <div slot="std-before-plugins-slot">
-              </div>
+              <slot name="std-before-plugins-slot">
+              </slot>
               ${this._columnsPickerSpawner()}
               ${this._paginationPlugin()}
               ${this._searchPlugin()}
-              <div slot="std-after-plugins-slot">
-              </div>
+              <slot name="std-after-plugins-slot">
+              </slot>
             </div>
           </div>
 
