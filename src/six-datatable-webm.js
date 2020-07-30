@@ -1,6 +1,10 @@
-import { LitElement, html, css, svg } from '/web_modules/lit-element.js';
-import { unsafeHTML } from '/web_modules/lit-html/directives/unsafe-html.js';
-import { upDownArrow, upChevron, downChevron } from './six-datatable-svgs-webm.js';
+import { LitElement, html, css, svg } from "/web_modules/lit-element.js";
+import { unsafeHTML } from "/web_modules/lit-html/directives/unsafe-html.js";
+import {
+  upDownArrow,
+  upChevron,
+  downChevron,
+} from "./six-datatable-svgs-webm.js";
 
 
 class SixDatatable extends LitElement {
@@ -55,9 +59,9 @@ class SixDatatable extends LitElement {
   }
 
   updated(cP) {
-    cP.has('data') && this._initData();
-    cP.has('_triggerFilter') && this._filterData();
-    cP.has('_triggerPageChange') && this._drawPages() && this._displayPage();
+    cP.has("data") && this._initData();
+    cP.has("_triggerFilter") && this._filterData();
+    cP.has("_triggerPageChange") && this._drawPages() && this._displayPage();
   }
 
   render() {
@@ -71,40 +75,80 @@ class SixDatatable extends LitElement {
 
           <div class="sdt-plugins-container">
             <div class="sdt-plugins">
+              <div slot="std-before-plugins-slot">
+              </div>
               ${this._columnsPickerSpawner()}
               ${this._paginationPlugin()}
               ${this._searchPlugin()}
+              <div slot="std-after-plugins-slot">
+              </div>
             </div>
           </div>
 
-          ${this._columnsPicker()}
+          ${this._columnsPickerPlugin()}
 
-          <div class="sdt-table-container ${this._showPicker ? 'picker-is-open' : ''}">
-            <table class="${this._getTableClass('table')}">
-                <thead class="${this._getTableClass('thead')}">
-                <tr class="${this._getTableClass('thead tr')}">
+          <div class="sdt-table-container ${
+            this._showPicker ? "picker-is-open" : ""
+          }">
+            <table class="${this._getTableClass("table")}">
+                <thead class="${this._getTableClass("thead")}">
+                <tr class="${this._getTableClass("thead tr")}">
                     ${Object.keys(this.columns).map((colKey) => {
                       return this._showColumn(colKey)
                         ? html`
-                            <th class="${this._getTableClass('thead tr th', colKey)}" @click="${() => this.setOrder(colKey)}">
-                              <span class="${this._getTableClass('thead tr th span', colKey)}">${this._getColumn(colKey).title} <i>${this._getOrderIcon(colKey)}</i></span>
+                            <th
+                              class="${this._getTableClass(
+                                "thead tr th",
+                                colKey
+                              )}"
+                              @click="${() => this.setOrder(colKey)}"
+                            >
+                              <span
+                                class="${this._getTableClass(
+                                  "thead tr th span",
+                                  colKey
+                                )}"
+                                >${this._getColumn(colKey).title}
+                                <i>${this._getOrderIcon(colKey)}</i></span
+                              >
                             </th>
                           `
-                        : '';
+                        : "";
                     })}
                 </tr>
                 </thead>
-                <tbody class="${this._getTableClass('tbody')}">
+                <tbody class="${this._getTableClass("tbody")}">
                     ${this._showingData.map((row) => {
-                      return html` <tr class="${this._getRowCSSClass(null, row, 'tbody tr')}">
+                      return html` <tr
+                        class="${this._getRowCSSClass(null, row, "tbody tr")}"
+                      >
                         ${Object.keys(this.columns).map((colKey) => {
                           return this._showColumn(colKey)
-                            ? html`<td class="${this._getRowCSSClass(colKey, row, 'tbody tr td')}">
-                                <span class="${this._getRowCSSClass(colKey, row, 'tbody tr td span')}" @click="${(e) => this._cellEmit(e, colKey, 'cell-click', row)}">
+                            ? html`<td
+                                class="${this._getRowCSSClass(
+                                  colKey,
+                                  row,
+                                  "tbody tr td"
+                                )}"
+                              >
+                                <span
+                                  class="${this._getRowCSSClass(
+                                    colKey,
+                                    row,
+                                    "tbody tr td span"
+                                  )}"
+                                  @click="${(e) =>
+                                    this._cellEmit(
+                                      e,
+                                      colKey,
+                                      "cell-click",
+                                      row
+                                    )}"
+                                >
                                   ${this._getColumnValueForRow(row, colKey)}
                                 </span>
                               </td>`
-                            : '';
+                            : "";
                         })}
                       </tr>`;
                     })}
@@ -147,7 +191,7 @@ class SixDatatable extends LitElement {
 
   _filterData() {
     if (this.hasExternalDataProvider) {
-      const customEvent = new CustomEvent('filterData', {
+      const customEvent = new CustomEvent("filterData", {
         detail: {
           search: this._search,
           order: this._order,
@@ -171,7 +215,7 @@ class SixDatatable extends LitElement {
     if (search) {
       search = search.toLowerCase();
       currentData = originalData.filter((row) => {
-        let rowValues = Object.values(row).join(' ').toLowerCase();
+        let rowValues = Object.values(row).join(" ").toLowerCase();
         return rowValues.indexOf(search) > -1;
       });
     }
@@ -186,11 +230,14 @@ class SixDatatable extends LitElement {
   }
 
   _getTableClass(elementName, colKey) {
-    return colKey && this.tableCSSClass[colKey] && this.tableCSSClass[colKey][elementName]
+    return colKey &&
+      this.tableCSSClass[colKey] &&
+      this.tableCSSClass[colKey][elementName]
       ? this.tableCSSClass[colKey][elementName]
-      : this.tableCSSClass['_default'] && this.tableCSSClass['_default'][elementName]
-      ? this.tableCSSClass['_default'][elementName]
-      : '';
+      : this.tableCSSClass["_default"] &&
+        this.tableCSSClass["_default"][elementName]
+      ? this.tableCSSClass["_default"][elementName]
+      : "";
   }
 
   /* Columns */
@@ -211,16 +258,20 @@ class SixDatatable extends LitElement {
     if (!colKey) {
       return;
     }
-    return this.columns[colKey].rowCSSClass && this.columns[colKey].rowCSSClass[tag] ? this.columns[colKey].rowCSSClass[tag] : '';
+    return this.columns[colKey].rowCSSClass &&
+      this.columns[colKey].rowCSSClass[tag]
+      ? this.columns[colKey].rowCSSClass[tag]
+      : "";
   }
 
   _getColumnValueForRow(row, colKey) {
     const column = this.columns[colKey];
 
-
     // Fixed html value
-    if (column.type && column.type === 'html') {
-      return unsafeHTML(row[colKey] && row[colKey].html ? row[colKey].html : column.html || '');
+    if (column.type && column.type === "html") {
+      return unsafeHTML(
+        row[colKey] && row[colKey].html ? row[colKey].html : column.html || ""
+      );
     }
 
     // Row-column value
@@ -241,7 +292,10 @@ class SixDatatable extends LitElement {
   }
 
   _columnCanBePicked(colKey) {
-    return this._getColumn(colKey).canBePicked === undefined || this._getColumn(colKey).canBePicked;
+    return (
+      this._getColumn(colKey).canBePicked === undefined ||
+      this._getColumn(colKey).canBePicked
+    );
   }
 
   /* Cells */
@@ -252,13 +306,15 @@ class SixDatatable extends LitElement {
     const eventData = this._columnIsHTML(colKey) ? rowData : rowData[colKey];
     const column = this._getColumn(colKey);
 
-    const customEvent = new CustomEvent('cell-click', {
+    const customEvent = new CustomEvent("cell-click", {
       detail: {
         colKey,
         // target: e.target.node,
         eventData,
         dataHandler: column.dataHandler || null,
-        dataHandlerFunction: column.dataHandler ? this[column.dataHandler] : null,
+        dataHandlerFunction: column.dataHandler
+          ? this[column.dataHandler]
+          : null,
       },
       composed: true,
       bubbles: true,
@@ -281,22 +337,46 @@ class SixDatatable extends LitElement {
 
   _columnsPickerSpawner() {
     return this.plugins.picker && this.plugins.picker.status
-      ? html` <div class="std-plg-columns-picker" @click="${this._handleColumnsPicker}"><button class="btn btn-blue">${unsafeHTML(this.plugins.picker.label)}</button></div> `
-      : '';
+      ? html`
+          <div
+            class="std-plg-columns-picker"
+            @click="${this._handleColumnsPicker}"
+          >
+            <button class="btn btn-blue">
+              ${unsafeHTML(this.plugins.picker.label)}
+            </button>
+          </div>
+        `
+      : "";
   }
 
-  _columnsPicker() {
-    return html`<div class="sdt-columns-picker-container ${this._showPicker ? 'picker-is-open' : ''}">
+  _columnsPickerPlugin() {
+    return html`<div
+      class="sdt-columns-picker-container ${this._showPicker
+        ? "picker-is-open"
+        : ""}"
+    >
       <ul class="">
         ${Object.keys(this.columns).map((colKey) => {
           return this._columnCanBePicked(colKey)
             ? html`<li>
-                <div class="sdt-columns-picker" @click="${() => this._setColumnProperty(colKey, 'show', !this._showColumn(colKey))}">
-                  <input type="checkbox" ?checked="${this._showColumn(colKey)}" />
+                <div
+                  class="sdt-columns-picker"
+                  @click="${() =>
+                    this._setColumnProperty(
+                      colKey,
+                      "show",
+                      !this._showColumn(colKey)
+                    )}"
+                >
+                  <input
+                    type="checkbox"
+                    ?checked="${this._showColumn(colKey)}"
+                  />
                   ${this._getColumn(colKey).title}
                 </div>
               </li>`
-            : '';
+            : "";
         })}
       </ul>
     </div>`;
@@ -310,8 +390,16 @@ class SixDatatable extends LitElement {
   // Search
   _searchPlugin() {
     return this.plugins.search && this.plugins.search.status
-      ? html` <div class="std-plg-search"><input @keyup="${this._setSearch}" type="search" placeholder="${this.plugins.search.label}" /></div> `
-      : '';
+      ? html`
+          <div class="std-plg-search">
+            <input
+              @keyup="${this._setSearch}"
+              type="search"
+              placeholder="${this.plugins.search.label}"
+            />
+          </div>
+        `
+      : "";
   }
 
   _setSearch(e) {
@@ -352,12 +440,12 @@ class SixDatatable extends LitElement {
 
     switch (currentOrderDirection) {
       case null:
-        newDirection = 'ASC';
+        newDirection = "ASC";
         break;
-      case 'ASC':
-        newDirection = 'DESC';
+      case "ASC":
+        newDirection = "DESC";
         break;
-      case 'DESC':
+      case "DESC":
         newDirection = null;
         break;
     }
@@ -388,9 +476,9 @@ class SixDatatable extends LitElement {
       switch (currentOrderDirection) {
         case null:
           return upDownArrow;
-        case 'ASC':
+        case "ASC":
           return upChevron;
-        case 'DESC':
+        case "DESC":
           return downChevron;
       }
     }
@@ -403,14 +491,16 @@ class SixDatatable extends LitElement {
    * @param {*} colKey
    * @param {*} order
    */
-  _sortData(colKey, order = 'ASC') {
+  _sortData(colKey, order = "ASC") {
     return function innerSort(a, b) {
       if (!a[colKey] || !b[colKey]) {
         return 0;
       }
 
-      const elA = typeof a[colKey] === 'string' ? a[colKey].toUpperCase() : a[colKey];
-      const elB = typeof b[colKey] === 'string' ? b[colKey].toUpperCase() : b[colKey];
+      const elA =
+        typeof a[colKey] === "string" ? a[colKey].toUpperCase() : a[colKey];
+      const elB =
+        typeof b[colKey] === "string" ? b[colKey].toUpperCase() : b[colKey];
 
       let comparison = 0;
       if (elA > elB) {
@@ -418,7 +508,7 @@ class SixDatatable extends LitElement {
       } else if (elA < elB) {
         comparison = -1;
       }
-      return order === 'DESC' ? comparison * -1 : comparison;
+      return order === "DESC" ? comparison * -1 : comparison;
     };
   }
 
@@ -434,7 +524,7 @@ class SixDatatable extends LitElement {
             ${this._drawPages()}
           </div>
         </div> `
-      : '';
+      : "";
   }
 
   /**
@@ -450,18 +540,38 @@ class SixDatatable extends LitElement {
     let pagesToLeftEnd = this.page - 5 > 0 ? 5 : this.page;
     let leftInterval = this.page - pagesToLeftEnd;
 
+
     for (let i = this.page; i > leftInterval; i--) {
-      pages.push(html`<div class="${i === this.page ? 'selected-page' : ''}" @click="${() => this._requestPage(i)}">${i}</div>`);
+      pages.push(
+        html`<div
+          class="${i === this.page ? "selected-page" : ""}"
+          @click="${() => this._requestPage(i)}"
+        >
+          ${i}
+        </div>`
+      );
     }
+
+    (this.page > 1) && pages.push(html`<div @click="${() => this._requestPage(this.page-1)}">«</div>`);
 
     pages.reverse();
 
-    let pagesToRightEnd = this.totalPages - this.page > 5 ? 5 : this.totalPages - this.page;
+    let pagesToRightEnd =
+      this.totalPages - this.page > 5 ? 5 : this.totalPages - this.page;
     let rightInterval = this.page + pagesToRightEnd;
 
     for (let i = this.page + 1; i <= rightInterval; i++) {
-      pages.push(html`<div class="${i === this.page ? 'selected-page' : ''}" @click="${() => this._requestPage(i)}">${i}</div>`);
+      pages.push(
+        html`<div
+          class="${i === this.page ? "selected-page" : ""}"
+          @click="${() => this._requestPage(i)}"
+        >
+          ${i}
+        </div>`
+      );
     }
+
+    (this.page < this.totalPages) && pages.push(html`<div @click="${() => this._requestPage(this.page+1)}">»</div>`);
 
     return pages;
   }
@@ -471,7 +581,9 @@ class SixDatatable extends LitElement {
    * @param {Number} page
    */
   _requestPage(page) {
-    this.hasExternalDataProvider ? this._eDPEmitPageRequest(page) : this._displayPage(page);
+    this.hasExternalDataProvider
+      ? this._eDPEmitPageRequest(page)
+      : this._displayPage(page);
   }
 
   /**
@@ -479,7 +591,7 @@ class SixDatatable extends LitElement {
    * @param {Number} page
    */
   _eDPEmitPageRequest(page) {
-    const customEvent = new CustomEvent('pageRequest', {
+    const customEvent = new CustomEvent("pageRequest", {
       detail: {
         search: this._search,
         order: this._order,
@@ -499,7 +611,11 @@ class SixDatatable extends LitElement {
   _displayPage(page) {
     this.page = page || this.page || 1;
 
-    if (this.hasExternalDataProvider || !this.plugins.pagination || !this.plugins.pagination.status) {
+    if (
+      this.hasExternalDataProvider ||
+      !this.plugins.pagination ||
+      !this.plugins.pagination.status
+    ) {
       this._showingData = this._data;
       return;
     }
@@ -522,4 +638,4 @@ class SixDatatable extends LitElement {
   }
 }
 
-window.customElements.define('six-datatable', SixDatatable);
+window.customElements.define("six-datatable", SixDatatable);

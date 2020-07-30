@@ -31,18 +31,31 @@
   margin-left: 0.75rem;
   border-width: 1px;
   border-radius: 0.25rem;
+  --text-opacity: 1;
   color: #a0aec0;
+  color: rgba(160, 174, 192, var(--text-opacity));
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --border-opacity: 1;
   border-color: #e2e8f0;
+  border-color: rgba(226, 232, 240, var(--border-opacity));
   cursor: pointer;
 }
 
 .pages-container div.selected-page {
+  --text-opacity: 1;
   color: #1a202c;
+  color: rgba(26, 32, 44, var(--text-opacity));
 }
 
 .pages-container div:hover {
+  --bg-opacity: 1;
   background-color: #edf2f7;
+  background-color: rgba(237, 242, 247, var(--bg-opacity));
+}
+
+.std-plg-pagination {
+  display: flex;
+  flex-grow: 1;
 }
 
 .sdt-plg-columns-picker {
@@ -65,7 +78,9 @@
   padding-bottom: 0.5rem;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
+  --text-opacity: 1;
   color: #4a5568;
+  color: rgba(74, 85, 104, var(--text-opacity));
   line-height: 1.25;
 }
 
@@ -85,9 +100,13 @@
 }
 
 .sdt-columns-picker-container li {
+  --bg-opacity: 1;
   background-color: #f7fafc;
+  background-color: rgba(247, 250, 252, var(--bg-opacity));
   border-width: 1px;
+  --border-opacity: 1;
   border-color: #e2e8f0;
+  border-color: rgba(226, 232, 240, var(--border-opacity));
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   padding-left: 1rem;
@@ -111,12 +130,18 @@
 }
 
 .btn-blue {
+  --bg-opacity: 1;
   background-color: #4299e1;
+  background-color: rgba(66, 153, 225, var(--bg-opacity));
+  --text-opacity: 1;
   color: #fff;
+  color: rgba(255, 255, 255, var(--text-opacity));
 }
 
 .btn-blue:hover {
+  --bg-opacity: 1;
   background-color: #2b6cb0;
+  background-color: rgba(43, 108, 176, var(--bg-opacity));
 }
 
 thead tr th span {
