@@ -147,7 +147,6 @@ class SixDatatable extends LitElement {
                         })}
                       </tr>`;
                     })}
-                </tr>
                 </tbody>
             </table>
           </div>
