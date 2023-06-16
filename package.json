@@ -9,7 +9,7 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "snowpack": "^1.7.0"
+        "snowpack": "^3.8.8"
     },
     "snowpack": {
         "webDependencies": [
